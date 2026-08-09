@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM eclipse-temurin:25-jdk-alpine AS build
 WORKDIR /workspace
 
 COPY .mvn .mvn
@@ -12,7 +12,7 @@ COPY src src
 RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -ntp -DskipTests package \
     && cp target/chatspringai-*.jar /workspace/app.jar
 
-FROM eclipse-temurin:21-jre-alpine AS runtime
+FROM eclipse-temurin:25-jre-alpine AS runtime
 RUN addgroup -S sillage && adduser -S sillage -G sillage
 
 WORKDIR /app
