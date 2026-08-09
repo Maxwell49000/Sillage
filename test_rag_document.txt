@@ -1,0 +1,25 @@
+﻿DOCUMENT: Introduction to RAG Systems
+
+Retrieval Augmented Generation (RAG) is a technique that combines information retrieval
+with language model generation. It allows AI models to reference external documents
+when generating responses.
+
+Key Benefits of RAG:
+1. Specialization: Models can be specialized on custom documents
+2. Up-to-date information: Documents can be updated without retraining
+3. Accuracy: Responses are grounded in source documents
+4. Transparency: Sources can be cited
+
+How RAG Works:
+1. Documents are split into chunks
+2. Chunks are converted to vector embeddings
+3. User queries are embedded and compared to chunks
+4. Similar chunks are retrieved and added to the prompt
+5. The model generates responses using this context
+
+RAG Applications:
+- Customer support with company knowledge bases
+- Legal document analysis
+- Medical record processing
+- Research paper summarization
+- Domain-specific question answering

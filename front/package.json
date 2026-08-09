@@ -1,0 +1,33 @@
+{
+    "name": "sillage-front",
+    "version": "0.0.1",
+    "description": "Interface de Sillage, assistant documentaire local propulsé par Spring AI.",
+    "productName": "Sillage",
+    "author": "Axel",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "eslint --ext .js,.vue src"
+    },
+    "dependencies": {
+        "axios": "^1.6.2",
+        "pinia": "^2.1.6",
+        "vue": "^3.4.0",
+        "vue-router": "^4.2.5"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.0.0",
+        "autoprefixer": "^10.4.16",
+        "eslint": "^8.54.0",
+        "eslint-plugin-vue": "^9.19.2",
+        "postcss": "^8.4.32",
+        "vite": "^5.0.0"
+    },
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=9.0.0"
+    }
+}

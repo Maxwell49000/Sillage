@@ -1,0 +1,14 @@
+.git
+.github
+.idea
+.vscode
+target
+front
+uploads
+*.log
+.env
+test*.txt
+postman_collection.json
+POSTMAN_*.md
+TESTING.md
+

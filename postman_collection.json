@@ -1,0 +1,303 @@
+{
+    "info": {
+        "name": "ChatSpringAI RAG System",
+        "description": "API collection for testing Retrieval Augmented Generation with document uploads and chat",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Health Check",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Server is running', function() {",
+                            "  pm.response.to.have.status(200);",
+                            "  pm.response.to.be.json;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/actuator/health",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "actuator",
+                        "health"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Setup Variables",
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [
+                            "// Generate a new conversation ID if not already set",
+                            "if (!pm.environment.get('conversation_id')) {",
+                            "  const uuid = require('uuid');",
+                            "  pm.environment.set('conversation_id', uuid.v4());",
+                            "  console.log('Generated conversation ID: ' + pm.environment.get('conversation_id'));",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/actuator/health",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "actuator",
+                        "health"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Upload Document (TXT)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "if (pm.response.code === 200) {",
+                            "  var jsonData = pm.response.json();",
+                            "  pm.environment.set('document_id', jsonData.documentId);",
+                            "  pm.test('Document uploaded successfully', function() {",
+                            "    pm.expect(jsonData.success).to.be.true;",
+                            "    pm.expect(jsonData.numberOfChunks).to.be.above(0);",
+                            "  });",
+                            "  console.log('Document ID: ' + jsonData.documentId);",
+                            "  console.log('Chunks created: ' + jsonData.numberOfChunks);",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "conversationId",
+                            "value": "{{conversation_id}}",
+                            "type": "text"
+                        },
+                        {
+                            "key": "file",
+                            "type": "file",
+                            "src": "test_rag_document.txt"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/documents/upload",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "documents",
+                        "upload"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Upload Document (PDF Sample)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "if (pm.response.code === 200) {",
+                            "  var jsonData = pm.response.json();",
+                            "  pm.test('PDF Document uploaded', function() {",
+                            "    pm.expect(jsonData.success).to.be.true;",
+                            "  });",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "conversationId",
+                            "value": "{{conversation_id}}",
+                            "type": "text"
+                        },
+                        {
+                            "key": "file",
+                            "type": "file",
+                            "src": "sample.pdf"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/documents/upload",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "documents",
+                        "upload"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Send Chat Message with RAG",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Chat response received', function() {",
+                            "  pm.response.to.have.status(200);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"conversationId\": \"{{conversation_id}}\",\n  \"message\": \"Quels sont les points clés du document que je viens d'uploader?\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/chat/send",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "chat",
+                        "send"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Ask About Document Content",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"conversationId\": \"{{conversation_id}}\",\n  \"message\": \"Explique comment fonctionne le RAG basé sur le document\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/chat/send",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "chat",
+                        "send"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Conversation History",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/chat/history/{{conversation_id}}",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "chat",
+                        "history",
+                        "{{conversation_id}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Delete Document",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Document deleted', function() {",
+                            "  pm.response.to.have.status(200);",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/documents/{{document_id}}",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "documents",
+                        "{{document_id}}"
+                    ]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "key": "conversation_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "document_id",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}

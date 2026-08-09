@@ -1,0 +1,14 @@
+﻿RAG - RETRIEVAL AUGMENTED GENERATION
+
+Le RAG est une technique qui permet aux modèles de langage d'accéder à des documents externes.
+
+Principes clés:
+1. Vector embedding - Convertir le texte en vecteurs numériques
+2. Similarity search - Trouver les documents pertinents
+3. Context injection - Ajouter le contexte au prompt
+4. Generation - Le modèle génère une réponse basée sur le contexte
+
+Avantages:
+- Réponses plus précises et fiables
+- Pas besoin de réentraîner le modèle
+- Support de multiples documents
