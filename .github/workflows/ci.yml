@@ -95,7 +95,7 @@ jobs:
           docker compose -f docker-compose.yml -f docker-compose.ollama.yml config --quiet
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GitHub Container Registry
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
